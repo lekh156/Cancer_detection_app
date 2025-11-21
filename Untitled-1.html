@@ -1,0 +1,98 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AJAX and JSON Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    #content, #json-content {
+      margin: 15px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      width: 300px;
+      background-color: #f9f9f9;
+    }
+    button {
+      padding: 8px 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+ </head>
+ <body>
+  <h1>AJAX & JSON Example</h1>
+  <div id="content">Text Content will load here...</div>
+  <button onclick="loadTextWithoutJQuery()">Load Text without jQuery</button>
+  <button onclick="loadTextWithJQuery()">Load Text with jQuery</button>
+  <div id="json-content">JSON Content will load here...</div>
+  <button onclick="loadJSONWithGetJSON()">Load JSON with getJSON()</button>
+  <button onclick="loadJSONWithParseJSON()">Load JSON with parseJSON()</button>
+  <script 
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    // (a) AJAX Request without jQuery
+    function loadTextWithoutJQuery() {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "textfile.txt", true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          document.getElementById("content").innerText = xhr.responseText;
+        }
+      };
+      xhr.send();
+    }
+    // (b) AJAX Request with jQuery $.ajax()
+    function loadTextWithJQuery() {
+      $.ajax({
+        url: "textfile.txt",
+        success: function (data) {
+          $("#content").text(data);
+        },
+        error: function (error) {
+          console.error("Error loading text file:", error);
+        }
+      });
+    // (c) jQuery $.getJSON() Method
+    function loadJSONWithGetJSON() {
+      $.getJSON("data.json", function (data) {
+        let jsonContent = `Name: ${data.name}, Age: ${data.age}, Country: $
+ {data.country}`;
+        $("#json-content").text(jsonContent);
+      });
+    }
+    // (d) jQuery $.parseJSON() Method
+    function loadJSONWithParseJSON() {
+      $.ajax({
+        url: "data.json",
+        method: "GET",
+        dataType: "text",  // Receive the data as plain text
+        success: function (response) {
+          const data = $.parseJSON(response);
+          let jsonContent = `Name: ${data.name}, Age: ${data.age}, Country: $
+ {data.country}`;
+          $("#json-content").text(jsonContent);
+        },
+        error: function (error) {
+          console.error("Error loading JSON file:", error);
+        }
+      });
+    }
+  </script>
+ </body>
+ </html>
+ textfile.txt
+ This is a sample text file content loaded via AJAX.
+ data.json
+ {
+    "name": "John Doe",
+    "age": 30,
+    "country": "USA"
+  }
+}
